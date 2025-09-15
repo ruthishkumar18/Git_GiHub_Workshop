@@ -197,3 +197,58 @@ capabilities.
 3.  Click "Ask AI" to get a response
 4.  The AI will analyze your knowledge base and provide answers
 5.  View the sources used for the response
+
+Development Setup
+bash
+# Clone your fork
+git clone https://github.com/your-username/Git_GiHub_Workshop.git
+cd Git_GiHub_Workshop
+
+# Set up development environment
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+
+# Make your changes and test
+python app.py
+📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+🙏 Acknowledgments
+Flask community for the excellent web framework
+
+Contributors to the Python packages used in this project
+
+OpenAI for inspiration in AI-powered knowledge management
+
+The open-source community for continuous inspiration
+
+📞 Support
+If you have any questions or need help:
+
+Check the Issues page
+
+Create a new issue with detailed description
+
+Email: ruthishkumar.2353045@srec.ac.in
+
+🗺️ Roadmap
+[v1.0] Basic note-taking and document management
+
+[v1.1] Web clipping functionality
+
+[v1.2] Search and AI query features
+
+[v2.0] User authentication and database integration
+
+[v2.1] Advanced AI capabilities
+
+[v3.0] Mobile application and browser extension
+
+<div align="center">
+Made with ❤️ using Python and Flask
+
+https://img.shields.io/github/stars/ruthishkumar18/Git_GiHub_Workshop?style=social
+https://img.shields.io/github/forks/ruthishkumar18/Git_GiHub_Workshop?style=social
+
+</div> ```
