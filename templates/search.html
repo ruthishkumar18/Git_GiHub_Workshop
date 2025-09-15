@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Search</h2>
+<p>Search across all your notes, documents, and web clips.</p>
+
+<div style="margin: 20px 0;">
+    <div style="display: flex;">
+        <input type="text" id="search-query" placeholder="Enter keywords or tags to search..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px 0 0 4px;">
+        <button class="btn" id="search-btn" style="border-radius: 0 4px 4px 0;">Search</button>
+    </div>
+</div>
+
+<hr style="margin: 30px 0;">
+
+<h3>Search Results</h3>
+<div id="search-results">
+    <p>Enter a search query to find content.</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search button handler
+        document.getElementById('search-btn').addEventListener('click', performSearch);
+        
+        // Allow pressing Enter to search
+        document.getElementById('search-query').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    });
+    
+    function performSearch() {
+        const query = document.getElementById('search-query').value;
+        
+        if (!query) {
+            alert('Please enter a search query');
+            return;
+        }
+        
+        const resultsElement = document.getElementById('search-results');
+        resultsElement.innerHTML = '<p>Searching...</p>';
+        
+        fetch(`/api/search?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(results => {
+                if (results.length === 0) {
+                    resultsElement.innerHTML = '<p>No results found. Try different keywords.</p>';
+                    return;
+                }
+                
+                resultsElement.innerHTML = `<p>Found ${results.length} results:</p>`;
+                
+                results.forEach(result => {
+                    const resultElement = document.createElement('div');
+                    resultElement.style.background = '#f8f9fa';
+                    resultElement.style.padding = '15px';
+                    resultElement.style.borderRadius = '8px';
+                    resultElement.style.marginBottom = '15px';
+                    
+                    if (result.type === 'note') {
+                        resultElement.innerHTML = `
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <span style="background: #4a6fa5; color: white; padding: 3px 8px; border-radius: 20px; font-size: 12px; margin-right: 10px;">Note</span>
+                                <h4 style="margin: 0;">${result.data.title}</h4>
+                            </div>
+                            <p>${result.data.content.substring(0, 150)}${result.data.content.length > 150 ? '...' : ''}</p>
+                            <div style="margin-top: 10px;">
+                                ${result.data.tags.map(tag => `<span style="background: #6b8cae; color: white; padding: 3px 8px; border-radius: 20px; font-size: 12px; margin-right: 5px;">${tag}</span>`).join('')}
+                            </div>
+                        `;
+                    } else if (result.type === 'document') {
+                        resultElement.innerHTML = `
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <span style="background: #28a745; color: white; padding: 3px 8px; border-radius: 20px; font-size: 12px; margin-right: 10px;">Document</span>
+                                <h4 style="margin: 0;">${result.data.original_name}</h4>
+                            </div>
+                            <p>${result.data.text_content.substring(0, 150)}${result.data.text_content.length > 150 ? '...' : ''}</p>
+                            <div style="margin-top: 10px;">
+                                ${result.data.tags.map(tag => `<span style="background: #6b8cae; color: white; padding: 3px 8px; border-radius: 20px; font-size: 12px; margin-right: 5px;">${tag}</span>`).join('')}
+                            </div>
+                        `;
+                    } else if (result.type === 'web_clip') {
+                        resultElement.innerHTML = `
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <span style="background: #ff6b6b; color: white; padding: 3px 8px; border-radius: 20px; font-size: 12px; margin-right: 10px;">Web Clip</span>
+                                <h4 style="margin: 0;"><a href="${result.data.url}" target="_blank">${result.data.title}</a></h4>
+                            </div>
+                            <p>${result.data.content.substring(0, 150)}${result.data.content.length > 150 ? '...' : ''}</p>
+                            <div style="margin-top: 10px;">
+                                ${result.data.tags.map(tag => `<span style="background: #6b8cae; color: white; padding: 3px 8px; border-radius: 20px; font-size: 12px; margin-right: 5px;">${tag}</span>`).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    resultsElement.appendChild(resultElement);
+                });
+            })
+            .catch(error => {
+                console.error('Error searching:', error);
+                resultsElement.innerHTML = '<p>Error performing search. Please try again.</p>';
+            });
+    }
+</script>
+{% endblock %}

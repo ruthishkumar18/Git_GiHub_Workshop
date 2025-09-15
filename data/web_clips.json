@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1ad11610-aa01-463c-8f9a-46bc3d7780cf",
+    "url": "www.google.com",
+    "title": "Error fetching www.google.com",
+    "content": "Could not fetch content: Invalid URL 'www.google.com': No scheme supplied. Perhaps you meant https://www.google.com?",
+    "tags": [
+      "google",
+      "website"
+    ],
+    "clipped_at": "2025-09-15T10:26:00.864512"
+  }
+]

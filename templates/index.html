@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Welcome to Your Personal Knowledge Assistant</h2>
+<p>This application helps you capture, organize, and retrieve information from various sources.</p>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;">
+    <div style="background: #f0f5ff; padding: 20px; border-radius: 8px;">
+        <h3>📝 Notes</h3>
+        <p>Create and organize notes with tags for easy retrieval.</p>
+    </div>
+    
+    <div style="background: #f0f8f4; padding: 20px; border-radius: 8px;">
+        <h3>📄 Documents</h3>
+        <p>Upload PDFs, Word documents, and text files. Content will be extracted and made searchable.</p>
+    </div>
+    
+    <div style="background: #fff5f0; padding: 20px; border-radius: 8px;">
+        <h3>🌐 Web Clipper</h3>
+        <p>Save content from web pages by providing the URL.</p>
+    </div>
+    
+    <div style="background: #f9f0ff; padding: 20px; border-radius: 8px;">
+        <h3>🔍 Search</h3>
+        <p>Search across all your notes, documents, and web clips.</p>
+    </div>
+    
+    <div style="background: #f0faff; padding: 20px; border-radius: 8px;">
+        <h3>🤖 AI Query</h3>
+        <p>Ask questions about your stored knowledge and get AI-powered answers.</p>
+    </div>
+</div>
+{% endblock %}

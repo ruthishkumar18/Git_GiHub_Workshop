@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>AI Query</h2>
+<p>Ask questions about your stored knowledge and get AI-powered answers.</p>
+
+<div style="margin: 20px 0;">
+    <input type="text" id="ai-query" placeholder="Ask a question about your stored information..." style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;">
+    <button class="btn" id="ask-btn">Ask AI</button>
+</div>
+
+<hr style="margin: 30px 0;">
+
+<h3>AI Response</h3>
+<div id="ai-response">
+    <p>Ask a question to get started.</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ask button handler
+        document.getElementById('ask-btn').addEventListener('click', askAI);
+        
+        // Allow pressing Enter to ask
+        document.getElementById('ai-query').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askAI();
+            }
+        });
+    });
+    
+    function askAI() {
+        const question = document.getElementById('ai-query').value;
+        
+        if (!question) {
+            alert('Please enter a question');
+            return;
+        }
+        
+        const responseElement = document.getElementById('ai-response');
+        responseElement.innerHTML = '<p>Thinking...</p>';
+        
+        fetch('/api/ai_query', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                question: question
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            let responseHTML = `
+                <div style="background: #f0f5ff; padding: 15px; border-radius: 8px;">
+                    <p><strong>Your question:</strong> "${data.question}"</p>
+                    <p><strong>AI response:</strong> ${data.response.replace(/\n/g, '<br>')}</p>
+            `;
+            
+            if (data.sources && data.sources.length > 0) {
+                responseHTML += `<p><strong>Sources:</strong></p><ul>`;
+                
+                data.sources.forEach(source => {
+                    if (source.type === 'note') {
+                        responseHTML += `<li>Note: ${source.data.title}</li>`;
+                    } else if (source.type === 'document') {
+                        responseHTML += `<li>Document: ${source.data.original_name}</li>`;
+                    } else if (source.type === 'web_clip') {
+                        responseHTML += `<li>Web Clip: ${source.data.title}</li>`;
+                    }
+                });
+                
+                responseHTML += `</ul>`;
+            }
+            
+            responseHTML += `</div>`;
+            
+            responseElement.innerHTML = responseHTML;
+        })
+        .catch(error => {
+            console.error('Error asking AI:', error);
+            responseElement.innerHTML = '<p>Error getting AI response. Please try again.</p>';
+        });
+    }
+</script>
+{% endblock %}
